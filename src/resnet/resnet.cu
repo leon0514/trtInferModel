@@ -125,7 +125,7 @@ public:
     void preprocess(int ibatch, const trt::Image &image,
                     shared_ptr<trt::Memory<unsigned char>> preprocess_buffer,
                     void *stream = nullptr) {
-        pre::AffineMatrix affine;
+        pre::ResizeMatrix affine;
         affine.compute(make_tuple(image.width, image.height),
                     make_tuple(network_input_width_, network_input_height_));
 
