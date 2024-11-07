@@ -7,6 +7,7 @@
 #include <sstream>
 #include <unordered_map>
 #include "common/check.hpp"
+#include "common/logger.hpp"
 
 namespace trt
 {

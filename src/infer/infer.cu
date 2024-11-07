@@ -1,5 +1,6 @@
 #include "infer/infer.hpp"
 #include "common/logger.hpp"
+#include "common/check.hpp"
 #include <NvInfer.h>
 #include <cuda_runtime.h>
 #include <stdarg.h>
@@ -12,6 +13,7 @@ namespace trt
 {
 
 using namespace std;
+using namespace nvinfer1;
 
 class __native_nvinfer_logger : public ILogger 
 {
@@ -42,6 +44,19 @@ template <typename _T>
 static void destroy_nvidia_pointer(_T *ptr)
 {
     if (ptr) ptr->destroy();
+}
+
+static std::string format_shape(const Dims &shape) 
+{
+    stringstream output;
+    char buf[64];
+    const char *fmts[] = {"%d", "x%d"};
+    for (int i = 0; i < shape.nbDims; ++i)
+    {
+        snprintf(buf, sizeof(buf), fmts[i != 0], shape.d[i]);
+        output << buf;
+    }
+  return output.str();
 }
 
 static std::vector<uint8_t> load_file(const string &file) 

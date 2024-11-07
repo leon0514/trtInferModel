@@ -1,5 +1,5 @@
 #include "resnet/resnet.hpp"
-
+#include "infer/infer.hpp"
 #include "common/check.hpp"
 #include "common/logger.hpp"
 #include "common/image.hpp"
@@ -122,7 +122,7 @@ public:
         }
     }
 
-    void preprocess(int ibatch, const Image &image,
+    void preprocess(int ibatch, const trt::Image &image,
                     shared_ptr<trt::Memory<unsigned char>> preprocess_buffer,
                     void *stream = nullptr) {
         pre::AffineMatrix affine;
@@ -173,19 +173,19 @@ public:
         // [0.485, 0.456, 0.406], [0.229, 0.224, 0.225]
         float mean[3] = {0.485, 0.456, 0.406}; 
         float std[3] = {0.229, 0.224, 0.225};
-        normalize_ = Norm::mean_std(mean, std, 1/255.0,  ChannelType::SwapRB);
+        normalize_ = pre::Norm::mean_std(mean, std, 1/255.0,  pre::ChannelType::SwapRB);
         num_classes_ = trt_->static_dims(1)[1];
         return true;
     }
 
-    virtual Attribute forward(const Image &image, void *stream = nullptr) override 
+    virtual Attribute forward(const trt::Image &image, void *stream = nullptr) override 
     {
         auto output = forwards({image}, stream);
         if (output.empty()) return {};
         return output[0];
     }
 
-    virtual vector<Attribute> forwards(const vector<Image> &images, void *stream = nullptr) override 
+    virtual vector<Attribute> forwards(const vector<trt::Image> &images, void *stream = nullptr) override 
     {
         int num_image = images.size();
         if (num_image == 0) return {};

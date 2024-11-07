@@ -13,7 +13,7 @@ struct Image {
     Image(const void *bgrptr, int width, int height) : bgrptr(bgrptr), width(width), height(height) {}
 };
 
-trt::Image cvimg(const cv::Mat &image) { return trt::Image(image.data, image.cols, image.rows); }
+Image cvimg(const cv::Mat &image);
 
 }
 

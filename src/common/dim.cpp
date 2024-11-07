@@ -9,4 +9,4 @@ dim3 block_dims(int numJobs){
   return numJobs < GPU_BLOCK_THREADS ? numJobs : GPU_BLOCK_THREADS;
 }
 
-int upbound(int n, int align = 32){ return (n + align - 1) / align * align; }
+int upbound(int n, int align){ return (n + align - 1) / align * align; }

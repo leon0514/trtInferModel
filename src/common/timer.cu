@@ -1,5 +1,7 @@
 #include "common/timer.hpp"
+#include "common/logger.hpp"
 #include "common/check.hpp"
+#include <stdio.h>
 
 Timer::Timer() 
 {
