@@ -150,7 +150,7 @@ public:
         checkRuntime(cudaMemcpyAsync(affine_matrix_device, affine_matrix_host, sizeof(affine.d2i),
                                     cudaMemcpyHostToDevice, stream_));
 
-        warp_affine_bilinear_and_normalize_plane(image_device, image.width * 3, image.width,
+        pre::warp_affine_bilinear_and_normalize_plane(image_device, image.width * 3, image.width,
                                                 image.height, input_device, network_input_width_,
                                                 network_input_height_, affine_matrix_device, 114,
                                                 normalize_, stream_);
