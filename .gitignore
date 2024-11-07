@@ -34,3 +34,10 @@
 
 *.onnx
 *.engine
+
+.vscode
+
+workspace/pro
+workspace/inference
+
+
