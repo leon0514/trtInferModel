@@ -5,6 +5,7 @@
 *.slo
 *.lo
 *.o
+*.cuo
 *.obj
 
 # Precompiled Headers
@@ -30,3 +31,6 @@
 *.exe
 *.out
 *.app
+
+*.onnx
+*.engine
