@@ -260,7 +260,7 @@ PYBIND11_MODULE(trtinfer, m){
                 << ")";
             if (box.pose.size() != 0)
             {
-                oss << ", PosePoint["
+                oss << ", PosePoint[";
                 for (size_t i = 0; i < box.pose.size(); ++i) 
                 {
                     oss << py::str(py::cast(box.pose[i]));

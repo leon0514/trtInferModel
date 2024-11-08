@@ -113,7 +113,7 @@ void yolov11poseInfer()
 
 }
 
-void yolov8()
+void yolov8Infer()
 {
     const std::string cocolabels[] = { "person" };
 
@@ -155,5 +155,6 @@ void yolov8()
 int main()
 {
     // resnetInfer();
-    yolov11poseInfer();
+    // yolov11poseInfer();
+    yolov8Infer();
 }
