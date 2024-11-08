@@ -33,14 +33,16 @@ struct Box
             class_label(class_label) {}
 };
 
+using  BoxArray = std::vector<Box>;
+
 class Infer {
 public:
-    virtual Attribute forward(const trt::Image &image, void *stream = nullptr) = 0;
-    virtual std::vector<Attribute> forwards(const std::vector<trt::Image> &images,
+    virtual BoxArray forward(const trt::Image &image, void *stream = nullptr) = 0;
+    virtual std::vector<BoxArray> forwards(const std::vector<trt::Image> &images,
                                             void *stream = nullptr) = 0;
 };
 
-std::shared_ptr<Infer> load(const std::string &engine_file);
+std::shared_ptr<Infer> load(const std::string &engine_file, float confidence_threshold=0.5, float nms_threshold=0.45f);
 }
 
 #endif 

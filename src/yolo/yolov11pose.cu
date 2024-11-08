@@ -332,7 +332,7 @@ public:
     }
 };
 
-Infer *loadraw(const std::string &engine_file, Type type, float confidence_threshold,
+Infer *loadraw(const std::string &engine_file, float confidence_threshold,
                float nms_threshold) 
 {
     InferImpl *impl = new InferImpl();
@@ -344,7 +344,7 @@ Infer *loadraw(const std::string &engine_file, Type type, float confidence_thres
     return impl;
 }
 
-shared_ptr<Infer> load(const string &engine_file, Type type, float confidence_threshold,
+shared_ptr<Infer> load(const string &engine_file, float confidence_threshold,
                        float nms_threshold) 
 {
     return std::shared_ptr<InferImpl>(
