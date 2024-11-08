@@ -80,7 +80,7 @@ struct ResizeRandomCropMatrix
     void compute(const std::tuple<int, int> &from, const std::tuple<int, int> &to) 
     {
         int resize_w = 1920;
-        int resize_h = 1080
+        int resize_h = 1080;
         
         int h = std::get<0>(from);
         int w = std::get<1>(from);

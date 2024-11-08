@@ -7,7 +7,7 @@
 #include "opencv2/opencv.hpp"
 #include "infer/infer.hpp"
 #include "resnet/resnet.hpp"
-#include "classificationWithoutPostProcessing/cls.hpp"
+#include "qoe/qoe.hpp"
 #include "yolo/yolov11pose.hpp"
 #include "common/image.hpp" 
 #include "common/data.hpp" 
@@ -104,11 +104,11 @@ public:
 };
 }}//! end namespace pybind11::detail
 
-class TrtClsNoPostInfer{
+class TrtQoEInfer{
 public:
-    TrtClsNoPostInfer(std::string model_path, int gpu_id = 0)
+    TrtQoEInfer(std::string model_path, int gpu_id = 0)
     {
-        instance_ = cls::load(model_path, gpu_id);
+        instance_ = qoe::load(model_path, gpu_id);
     }
 
 
@@ -129,7 +129,7 @@ public:
 	}
 
 private:
-    std::shared_ptr<cls::Infer> instance_;
+    std::shared_ptr<qoe::Infer> instance_;
 
 };
 
@@ -252,9 +252,9 @@ PYBIND11_MODULE(trtinfer, m){
         .def("forward_path", &TrtResnetInfer::forward_path, py::arg("image_path"))
 		.def("forward", &TrtResnetInfer::forward, py::arg("image"));
     
-    py::class_<TrtClsNoPostInfer>(m, "TrtClsNoPostInfer")
+    py::class_<TrtQoEInfer>(m, "TrtQoEInfer")
 		.def(py::init<string, int>(), py::arg("model_path"), py::arg("gpu_id"))
-		.def_property_readonly("valid", &TrtClsNoPostInfer::valid)
-        .def("forward_path", &TrtClsNoPostInfer::forward_path, py::arg("image_path"))
-		.def("forward", &TrtClsNoPostInfer::forward, py::arg("image"));
+		.def_property_readonly("valid", &TrtQoEInfer::valid)
+        .def("forward_path", &TrtQoEInfer::forward_path, py::arg("image_path"))
+		.def("forward", &TrtQoEInfer::forward, py::arg("image"));
 };

@@ -5,7 +5,7 @@
 #include "common/image.hpp"
 #include "common/data.hpp"
 
-namespace cls
+namespace qoe
 {
 
 using Attribute = data::Attribute;

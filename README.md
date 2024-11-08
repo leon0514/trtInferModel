@@ -17,19 +17,45 @@ score : 0.997001, label : 2
 ![](./workspace/result/Yolov11-pose-result.jpg)
 
 
+## 图像质量评估
+该模型来自于腾讯的 `CenseoQoE`
+- 前处理    
+通过调整图像的大小并从中心进行裁剪，确保输出图像符合目标尺寸的要求。如果原始图像的宽高比与目标尺寸不匹配，还会进行必要的旋转以保持图像内容的正确方向
+    ``` json
+    {
+        "input_process": {
+            "read_mode": "resize_random_crop",
+            "sub_img_dim": [ 1280, 720 ],
+            "resize_dim": [ 1920, 1080 ]
+        }
+    }
+    ```
+
+- 输出
+    ``` shell
+    [infer.cu:251]: Infer 0x301c600 [StaticShape]
+    [infer.cu:264]: Inputs: 1
+    [infer.cu:269]: 	0.test_input : shape {1x3x1280x720}
+    [infer.cu:272]: Outputs: 1
+    [infer.cu:277]: 	0.test_output : shape {1x1}
+    Attribute(class_label: 0, confidence: 0.609141)
+    ```
+
+
 # pybind11 封装
 - 编译
-```shell
-make all
-```
+    ```shell
+    make all
+    ```
 - 使用
-```python
-import trtinfer
-model  = trtinfer.TrtYolov11poseInfer("yolov11s-pose.transd.engine", 0, 0.5, 0.45)
-result = model.forward_path("inference/gril.jpg")
-print(result)
-```
+    ```python
+    import trtinfer
+    model  = trtinfer.TrtYolov11poseInfer("yolov11s-pose.transd.engine", 0, 0.5, 0.45)
+    result = model.forward_path("inference/gril.jpg")
+    print(result)
+    ```
 
 
 # Reference
 - [🌻infer](https://github.com/shouxieai/infer)
+- [🌻CenseoQoE](https://github.com/Tencent/CenseoQoE)

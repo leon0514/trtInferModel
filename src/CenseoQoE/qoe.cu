@@ -1,4 +1,4 @@
-#include "classificationWithoutPostProcessing/cls.hpp"
+#include "CenseoQoE/qoe.hpp"
 #include "infer/infer.hpp"
 #include "common/check.hpp"
 #include "common/logger.hpp"
@@ -9,13 +9,10 @@
 #include "preprocess/preprocess.hpp"
 
 
-namespace cls
+namespace qoe
 {
 
 using namespace std;
-
-
-
 
 class InferImpl : public Infer 
 {
