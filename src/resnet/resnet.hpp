@@ -8,7 +8,7 @@
 namespace resnet
 {
 
-using Attribute = data::Attribute
+using Attribute = data::Attribute;
 
 class Infer {
 public:
