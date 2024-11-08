@@ -16,5 +16,9 @@ score : 0.997001, label : 2
 ## yolov11 pose
 ![](./workspace/result/Yolov11-pose-result.jpg)
 
+
+# pybind11 封装
+
+
 # Reference
 - [🌻infer](https://github.com/shouxieai/infer)

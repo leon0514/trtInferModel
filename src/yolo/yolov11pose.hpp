@@ -42,7 +42,7 @@ public:
                                             void *stream = nullptr) = 0;
 };
 
-std::shared_ptr<Infer> load(const std::string &engine_file, float confidence_threshold=0.5, float nms_threshold=0.45f);
+std::shared_ptr<Infer> load(const std::string &engine_file, float confidence_threshold=0.5f, float nms_threshold=0.45f);
 }
 
 #endif 

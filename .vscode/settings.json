@@ -49,6 +49,7 @@
         "vector": "cpp",
         "algorithm": "cpp",
         "tuple": "cpp",
-        "atomic": "cpp"
+        "atomic": "cpp",
+        "iostream": "cpp"
     }
 }

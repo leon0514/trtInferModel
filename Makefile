@@ -8,6 +8,7 @@ cuda_home := /usr/local/cuda-12
 cuda_arch := 8.6
 nvcc      := $(cuda_home)/bin/nvcc -ccbin=$(cc)
 
+
 project_include_path := src
 opencv_include_path  := /usr/local/include/opencv4
 trt_include_path     := /opt/nvidia/tensorrt/TensorRT-8.6.1.6/include/ 
@@ -68,6 +69,8 @@ cu_objs := $(cu_srcs:.cu=.cu.o)
 cu_objs := $(cu_objs:$(srcdir)/%=$(objdir)/%)
 cu_mk   := $(cu_objs:.cu.o=.cu.mk)
 
+pro_cpp_objs := $(filter-out interface.o, $(cpp_objs))
+
 # 所有的头文件依赖产生的makefile文件，进行include
 ifneq ($(MAKECMDGOALS), clean)
 include $(mks)
@@ -92,7 +95,7 @@ $(workdir)/$(name) : $(cpp_objs) $(cu_objs)
 	@mkdir -p $(dir $@)
 	@$(cc) -shared $^ -o $@ $(link_flags)
 
-$(workdir)/pro : $(cpp_objs) $(cu_objs)
+$(workdir)/pro : $(pro_cpp_objs) $(cu_objs)
 	@echo Link $@
 	@mkdir -p $(dir $@)
 	@$(cc) $^ -o $@ $(link_flags)
