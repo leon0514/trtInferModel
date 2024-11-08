@@ -232,19 +232,19 @@ public:
         network_input_height_ = input_dim[2];
         isdynamic_model_ = trt_->has_dynamic_dim();
 
-        normalize_ = pre::Norm::alpha_beta(1 / 255.0f, 0.0f, ChannelType::SwapRB);
+        normalize_ = pre::Norm::alpha_beta(1 / 255.0f, 0.0f, pre::ChannelType::SwapRB);
         num_classes_ = 1;
         return true;
     }
 
-    virtual BoxArray forward(const Image &image, void *stream = nullptr) override 
+    virtual BoxArray forward(const trt::Image &image, void *stream = nullptr) override 
     {
         auto output = forwards({image}, stream);
         if (output.empty()) return {};
         return output[0];
     }
 
-    virtual vector<BoxArray> forwards(const vector<Image> &images, void *stream = nullptr) override 
+    virtual vector<BoxArray> forwards(const vector<trt::Image> &images, void *stream = nullptr) override 
     {
         int num_image = images.size();
         if (num_image == 0) return {};
