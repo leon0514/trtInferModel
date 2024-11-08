@@ -322,9 +322,9 @@ public:
                     {
                         result_object_box.pose.emplace_back(pbox[8+i*3], pbox[8+i*3+1], pbox[8+i*3+2]);
                     }
+                    output.emplace_back(result_object_box);
                 }
             }
-            output.emplace_back(result_object_box);
         }
         return arrout;
     }
