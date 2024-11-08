@@ -98,8 +98,8 @@ public:
 
         // normalize_ = Norm::alpha_beta(1 / 255.0f, 0.0f, ChannelType::SwapRB);
         // [0.485, 0.456, 0.406], [0.229, 0.224, 0.225]
-        float mean[3] = {0.485, 0.456, 0.406}; 
-        float std[3] = {0.229, 0.224, 0.225};
+        // float mean[3] = {0.485, 0.456, 0.406}; 
+        // float std[3] = {0.229, 0.224, 0.225};
         normalize_ = pre::Norm::mean_std(mean, std, 1/255.0,  pre::ChannelType::SwapRB);
         num_classes_ = trt_->static_dims(1)[1];
         return true;
