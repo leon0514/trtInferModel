@@ -275,7 +275,7 @@ public:
         }
         adjust_memory(infer_batch_size);
 
-        vector<AffineMatrix> affine_matrixs(num_image);
+        vector<pre::AffineMatrix> affine_matrixs(num_image);
         cudaStream_t stream_ = (cudaStream_t)stream;
         for (int i = 0; i < num_image; ++i)
         preprocess(i, images[i], preprocess_buffers_[i], affine_matrixs[i], stream);
@@ -336,7 +336,7 @@ Infer *loadraw(const std::string &engine_file, float confidence_threshold,
                float nms_threshold) 
 {
     InferImpl *impl = new InferImpl();
-    if (!impl->load(engine_file, type, confidence_threshold, nms_threshold)) 
+    if (!impl->load(engine_file, confidence_threshold, nms_threshold)) 
     {
         delete impl;
         impl = nullptr;
