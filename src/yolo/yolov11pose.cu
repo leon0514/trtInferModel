@@ -130,7 +130,7 @@ static __global__ void fast_nms_kernel(float *bboxes, int MAX_IMAGE_BOXES, float
 static void decode_kernel_invoker(float *predict, int num_bboxes, int num_classes, int output_cdim,
                                   float confidence_threshold, float nms_threshold,
                                   float *invert_affine_matrix, float *parray, int MAX_IMAGE_BOXES,
-                                  Type type, cudaStream_t stream) 
+                                cudaStream_t stream) 
 {
     auto grid = grid_dims(num_bboxes);
     auto block = block_dims(num_bboxes);
@@ -151,7 +151,6 @@ class InferImpl : public Infer
 public:
     shared_ptr<trt::Infer> trt_;
     string engine_file_;
-    Type type_;
     float confidence_threshold_;
     float nms_threshold_;
     vector<shared_ptr<trt::Memory<unsigned char>>> preprocess_buffers_;
@@ -299,7 +298,7 @@ public:
             checkRuntime(cudaMemsetAsync(boxarray_device, 0, sizeof(int), stream_));
             decode_kernel_invoker(image_based_bbox_output, bbox_head_dims_[1], num_classes_,
                                     bbox_head_dims_[2], confidence_threshold_, nms_threshold_,
-                                    affine_matrix_device, boxarray_device, MAX_IMAGE_BOXES, type_, stream_);
+                                    affine_matrix_device, boxarray_device, MAX_IMAGE_BOXES, stream_);
         }
         checkRuntime(cudaMemcpyAsync(output_boxarray_.cpu(), output_boxarray_.gpu(),
                                     output_boxarray_.gpu_bytes(), cudaMemcpyDeviceToHost, stream_));
