@@ -113,6 +113,45 @@ void yolov11poseInfer()
 
 }
 
+void yolov8()
+{
+    const std::string cocolabels[] = { "person" };
+
+    cv::Mat image = cv::imread("inference/gril.jpg");
+    auto yolov8 = yolov8::load("yolov8.engine");
+    if (yolov8 == nullptr) return;
+    auto objs = yolov8->forward(trt::cvimg(image));
+    printf("objs size : %d\n", objs.size());
+    for (auto &obj : objs) 
+    {
+        uint8_t b, g, r;
+        std::tie(b, g, r) = random_color(obj.class_label);
+        cv::rectangle(image, cv::Point(obj.left, obj.top), cv::Point(obj.right, obj.bottom),
+                    cv::Scalar(b, g, r), 5);
+        if (obj.class_label > 0)
+        {
+            continue;
+        }
+        auto name = cocolabels[obj.class_label];
+        auto caption = cv::format("%s %.2f", name, obj.confidence);
+        int width = cv::getTextSize(caption, 0, 1, 2, nullptr).width + 10;
+        cv::rectangle(image, cv::Point(obj.left - 3, obj.top - 33),
+                    cv::Point(obj.left + width, obj.top), cv::Scalar(b, g, r), -1);
+        cv::putText(image, caption, cv::Point(obj.left, obj.top - 5), 0, 1, cv::Scalar::all(0), 2, 16);
+
+        for (const auto& point : obj.pose)
+        {
+            int x = (int)point.x;
+            int y = (int)point.y;
+            cv::circle(image, cv::Point(x, y), 6, cv::Scalar(b, g, r), -1);
+        }
+        printf("Save result to Yolov8-result.jpg, %d objects\n", (int)objs.size());
+        cv::imwrite("Yolov8-result.jpg", image);
+    }
+
+}
+
+
 int main()
 {
     // resnetInfer();

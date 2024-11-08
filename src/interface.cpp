@@ -9,6 +9,7 @@
 #include "resnet/resnet.hpp"
 #include "CenseoQoE/qoe.hpp"
 #include "yolo/yolov11pose.hpp"
+#include "yolo/yolov8.hpp"
 #include "common/image.hpp" 
 #include "common/data.hpp" 
 
@@ -191,6 +192,34 @@ private:
 
 };
 
+class TrtYolov8Infer{
+public:
+    TrtYolov8Infer(std::string model_path, int gpu_id = 0, float confidence_threshold=0.5f, float nms_threshold=0.45f)
+    {
+        instance_ = yolov8::load(model_path, gpu_id, confidence_threshold, nms_threshold);
+    }
+
+    data::BoxArray forward(const cv::Mat& image)
+    {
+        return instance_->forward(trt::cvimg(image));
+    }
+
+    data::BoxArray forward_path(const std::string& image_path)
+    {
+        cv::Mat image = cv::imread(image_path);
+        return instance_->forward(trt::cvimg(image));
+    }
+
+
+    bool valid(){
+		return instance_ != nullptr;
+	}
+
+private:
+    std::shared_ptr<yolov8::Infer> instance_;
+
+};
+
 
 PYBIND11_MODULE(trtinfer, m){
     py::class_<data::Attribute>(m, "Attribute")
@@ -228,15 +257,20 @@ PYBIND11_MODULE(trtinfer, m){
                 << ", right: " << box.right
                 << ", bottom: " << box.bottom
                 << ", confidence: " << box.confidence
-                << "), Pose: [";
-
-            for (size_t i = 0; i < box.pose.size(); ++i) {
-                oss << py::str(py::cast(box.pose[i]));
-                if (i < box.pose.size() - 1) {
-                    oss << ", ";
+                << ")";
+            if (box.pose.size() != 0)
+            {
+                oss << ", PosePoint["
+                for (size_t i = 0; i < box.pose.size(); ++i) 
+                {
+                    oss << py::str(py::cast(box.pose[i]));
+                    if (i < box.pose.size() - 1) {
+                        oss << ", ";
+                    }
                 }
+                oss << "]";
             }
-            oss << "]";
+            
             return oss.str();
         });
 
@@ -245,6 +279,12 @@ PYBIND11_MODULE(trtinfer, m){
 		.def_property_readonly("valid", &TrtYolov11poseInfer::valid)
         .def("forward_path", &TrtYolov11poseInfer::forward_path, py::arg("image_path"))
 		.def("forward", &TrtYolov11poseInfer::forward, py::arg("image"));
+
+    py::class_<TrtYolov8Infer>(m, "TrtYolov8Infer")
+		.def(py::init<string, int, float, float>(), py::arg("model_path"), py::arg("gpu_id"), py::arg("confidence_threshold"), py::arg("nms_threshold"))
+		.def_property_readonly("valid", &TrtYolov8Infer::valid)
+        .def("forward_path", &TrtYolov8Infer::forward_path, py::arg("image_path"))
+		.def("forward", &TrtYolov8Infer::forward, py::arg("image"));
 
 	py::class_<TrtResnetInfer>(m, "TrtResnetInfer")
 		.def(py::init<string, int>(), py::arg("model_path"), py::arg("gpu_id"))

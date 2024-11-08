@@ -16,6 +16,12 @@ score : 0.997001, label : 2
 ## yolov11 pose
 ![](./workspace/result/Yolov11-pose-result.jpg)
 
+## yolov8 yolov11
+![](./workspace/result/Yolov8-result.jpg)
+
+## yolo系列输出shape转换
+coco 数据集 yolov8、yolov11的模型输出为 `1x84x8400`     
+在处理这个输出的时候需要将其转换为`1x8400x84`，可以利用[infer](https://github.com/shouxieai/infer)仓库中的v8trans.py脚本进行转换
 
 ## 图像质量评估
 该模型来自于腾讯的 `CenseoQoE`

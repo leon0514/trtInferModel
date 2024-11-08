@@ -90,7 +90,8 @@ struct ResizeRandomCropMatrix
 
         // 计算缩放比例
         bool flag = false;
-        if ((w - h) * (resize_w - resize_h) < 0) {
+        if ((w - h) * (resize_w - resize_h) < 0) 
+        {
             std::swap(resize_w, resize_h);
             std::swap(sub_img_w, sub_img_h);
             flag = true;
@@ -111,7 +112,8 @@ struct ResizeRandomCropMatrix
         i2d[5] = -scale * cy + ty;
 
         // 如果需要旋转90度
-        if (flag) {
+        if (flag) 
+        {
             std::swap(i2d[0], i2d[3]);
             std::swap(i2d[1], i2d[4]);
         }

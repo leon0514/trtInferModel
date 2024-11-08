@@ -84,7 +84,8 @@ class __native_engine_context
 public:
     virtual ~__native_engine_context() { destroy(); }
 
-    bool construct(const void *pdata, size_t size) {
+    bool construct(const void *pdata, size_t size) 
+    {
         destroy();
 
         if (pdata == nullptr || size == 0) return false;
@@ -102,7 +103,8 @@ public:
     }
 
 private:
-    void destroy() {
+    void destroy() 
+    {
         context_.reset();
         engine_.reset();
         runtime_.reset();
