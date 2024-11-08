@@ -210,13 +210,13 @@ PYBIND11_MODULE(trtinfer, m){
         });
 
     py::class_<TrtYolov11poseInfer>(m, "TrtYolov11poseInfer")
-		.def(py::init<string, float, float>(), py::arg("model_path"), py::arg("confidence_threshold"), py::arg("nms_threshold"))
+		.def(py::init<string, int, float, float>(), py::arg("model_path"), py::arg("gpu_id"), py::arg("confidence_threshold"), py::arg("nms_threshold"))
 		.def_property_readonly("valid", &TrtYolov11poseInfer::valid)
         .def("forward_path", &TrtYolov11poseInfer::forward_path, py::arg("image_path"))
 		.def("forward", &TrtYolov11poseInfer::forward, py::arg("image"));
 
 	py::class_<TrtResnetInfer>(m, "TrtResnetInfer")
-		.def(py::init<string>(), py::arg("model_path"))
+		.def(py::init<string, int>(), py::arg("model_path"), py::arg("gpu_id"))
 		.def_property_readonly("valid", &TrtResnetInfer::valid)
         .def("forward_path", &TrtResnetInfer::forward_path, py::arg("image_path"))
 		.def("forward", &TrtResnetInfer::forward, py::arg("image"));

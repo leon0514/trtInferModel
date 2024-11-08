@@ -50,6 +50,7 @@
         "algorithm": "cpp",
         "tuple": "cpp",
         "atomic": "cpp",
-        "iostream": "cpp"
+        "iostream": "cpp",
+        "complex": "cpp"
     }
 }
