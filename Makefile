@@ -69,7 +69,7 @@ cu_objs := $(cu_srcs:.cu=.cu.o)
 cu_objs := $(cu_objs:$(srcdir)/%=$(objdir)/%)
 cu_mk   := $(cu_objs:.cu.o=.cu.mk)
 
-pro_cpp_objs := $(filter-out interface.o, $(cpp_objs))
+pro_cpp_objs := $(filter-out objs/interface.cpp.o, $(cpp_objs))
 
 # 所有的头文件依赖产生的makefile文件，进行include
 ifneq ($(MAKECMDGOALS), clean)
