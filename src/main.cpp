@@ -1,5 +1,5 @@
 #include "resnet/resnet.hpp"
-#include "resnet/yolov11pose.hpp"
+#include "yolo/yolov11pose.hpp"
 #include "opencv2/opencv.hpp"
 #include "common/timer.hpp"
 #include "common/image.hpp"
