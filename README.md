@@ -18,6 +18,17 @@ score : 0.997001, label : 2
 
 
 # pybind11 封装
+- 编译
+```shell
+make all
+```
+- 使用
+```python
+import trtinfer
+model  = trtinfer.TrtYolov11poseInfer("yolov11s-pose.transd.engine", 0, 0.5, 0.45)
+result = model.forward_path("inference/gril.jpg")
+print(result)
+```
 
 
 # Reference
