@@ -171,13 +171,13 @@ PYBIND11_MODULE(trtinfer, m){
             return oss.str();
         });
 
-    py::class_<yolov11pose::Point>(m, "Point")
-        .def_readwrite("x", &yolov11pose::Point::x)
-        .def_readwrite("y", &yolov11pose::Point::x)
-        .def_readwrite("confidence", &yolov11pose::Point::confidence)
-        .def("__repr__", [](const yolov11pose::Point &point) {
+    py::class_<yolov11pose::PosePoint>(m, "PosePoint")
+        .def_readwrite("x", &yolov11pose::PosePoint::x)
+        .def_readwrite("y", &yolov11pose::PosePoint::x)
+        .def_readwrite("confidence", &yolov11pose::PosePoint::confidence)
+        .def("__repr__", [](const yolov11pose::PosePoint &point) {
             std::ostringstream oss;
-            oss << "Point(x: " << point.x << ", y: " << point.y << ", confidence: " << point.y <<")";
+            oss << "PosePoint(x: " << point.x << ", y: " << point.y << ", confidence: " << point.confidence <<")";
             return oss.str();
         });
     
@@ -200,8 +200,7 @@ PYBIND11_MODULE(trtinfer, m){
                 << "), Pose: [";
 
             for (size_t i = 0; i < box.pose.size(); ++i) {
-                // 调用 Point 的 __repr__ 方法
-                oss << py::str(box.pose[i]);
+                oss << py::str(py::cast(box.pose[i]));
                 if (i < box.pose.size() - 1) {
                     oss << ", ";
                 }
