@@ -1,5 +1,5 @@
 cc        := g++
-name      := trtresnet.so
+name      := trtinfer.so
 workdir   := workspace
 srcdir    := src
 objdir    := objs
