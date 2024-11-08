@@ -57,12 +57,14 @@ void resnetInfer()
 
 void yolov11poseInfer()
 {
-    std::vector<std::pair<int, int>> coco_pairs = {
+    const std::vector<std::pair<int, int>> coco_pairs = {
         {0, 1}, {0, 2}, {0, 11}, {0, 12}, {1, 3}, {2, 4},
         {5, 6}, {5, 7}, {7, 9}, {6, 8}, {8, 10},
         {11, 12}, {5, 11}, {6, 12},
         {11, 13}, {13, 15}, {12, 14}, {14, 16}
     };
+
+    const std::string cocolabels[] = { "person" };
 
     cv::Mat image = cv::imread("inference/gril.jpg");
     auto yolov11pose = yolov11pose::load("resnet.engine");
