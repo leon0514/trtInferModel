@@ -7,6 +7,7 @@
 #include "opencv2/opencv.hpp"
 #include "infer/infer.hpp"
 #include "resnet/resnet.hpp"
+#include "yolo/yolov11pose.hpp"
 #include "common/image.hpp"
 
 #define UNUSED(expr) do { (void)(expr); } while (0)
@@ -108,20 +109,16 @@ public:
         instance_ = resnet::load(model_path);
     }
 
-    resnet::Image cvimg(const cv::Mat &image) 
-    { 
-        return trt::Image(image.data, image.cols, image.rows); 
-    }
 
     resnet::Attribute forward(const cv::Mat& image)
     {
-        return instance_->forward(cvimg(image));
+        return instance_->forward(trt::cvimg(image));
     }
 
     resnet::Attribute forward_path(const std::string& image_path)
     {
         cv::Mat image = cv::imread(image_path);
-        return instance_->forward(cvimg(image));
+        return instance_->forward(trt::cvimg(image));
     }
 
 
@@ -142,20 +139,15 @@ public:
         instance_ = yolov11pose::load(model_path);
     }
 
-    trt::Image cvimg(const cv::Mat &image) 
-    { 
-        return trt::Image(image.data, image.cols, image.rows); 
-    }
-
     yolov11pose::BoxArray forward(const cv::Mat& image)
     {
-        return instance_->forward(cvimg(image));
+        return instance_->forward(trt::cvimg(image));
     }
 
     yolov11pose::BoxArray forward_path(const std::string& image_path)
     {
         cv::Mat image = cv::imread(image_path);
-        return instance_->forward(cvimg(image));
+        return instance_->forward(trt::cvimg(image));
     }
 
 
@@ -190,19 +182,19 @@ PYBIND11_MODULE(trtinfer, m){
             std::ostringstream oss;
             oss << "Box(class_label: " 
                 << attr.class_label 
-                << ", left: " << left
-                << ", top: " << top
-                << ", right: " << right
-                << ", bottom: " << bottom
+                << ", left: " << attr.left
+                << ", top: " << attr.top
+                << ", right: " << attr.right
+                << ", bottom: " << attr.bottom
                 << ", confidence: " << attr.confidence << ")";
             return oss.str();
         });
 
     py::class_<TrtYolov11poseInfer>(m, "TrtYolov11poseInfer")
 		.def(py::init<string, float, float>(), py::arg("model_path"), py::arg("confidence_threshold"), py::arg("nms_threshold"))
-		.def_property_readonly("valid", &TrtResnetInfer::valid)
-        .def("forward_path", &TrtResnetInfer::forward_path, py::arg("image_path"))
-		.def("forward", &TrtResnetInfer::forward, py::arg("image"));
+		.def_property_readonly("valid", &TrtYolov11poseInfer::valid)
+        .def("forward_path", &TrtYolov11poseInfer::forward_path, py::arg("image_path"))
+		.def("forward", &TrtYolov11poseInfer::forward, py::arg("image"));
 
 	py::class_<TrtResnetInfer>(m, "TrtResnetInfer")
 		.def(py::init<string>(), py::arg("model_path"))
