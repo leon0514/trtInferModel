@@ -40,6 +40,8 @@ struct Box
             class_label(class_label) {}
 };
 
+using BoxArray = std::vector<Box>;
+
 }
 
 

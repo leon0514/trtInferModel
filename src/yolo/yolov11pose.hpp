@@ -12,7 +12,7 @@ namespace yolov11pose
 using PosePoint = data::PosePoint;
 using Box       = data::Box;
 
-using  BoxArray = std::vector<Box>;
+using BoxArray  = data::BoxArray;
 
 class Infer {
 public:
