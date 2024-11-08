@@ -1,4 +1,5 @@
 #include "resnet/resnet.hpp"
+#include "resnet/yolov11pose.hpp"
 #include "opencv2/opencv.hpp"
 #include "common/timer.hpp"
 #include "common/image.hpp"
@@ -35,7 +36,7 @@ std::tuple<uint8_t, uint8_t, uint8_t> hsv2bgr(float h, float s, float v)
             r = 1, g = 1, b = 1;
             break;
     }
-    return make_tuple(static_cast<uint8_t>(b * 255), static_cast<uint8_t>(g * 255),
+    return std::make_tuple(static_cast<uint8_t>(b * 255), static_cast<uint8_t>(g * 255),
                         static_cast<uint8_t>(r * 255));
 }
 
@@ -73,7 +74,7 @@ void yolov11poseInfer()
     for (auto &obj : objs) 
     {
         uint8_t b, g, r;
-        tie(b, g, r) = random_color(obj.class_label);
+        std::tie(b, g, r) = random_color(obj.class_label);
         cv::rectangle(image, cv::Point(obj.left, obj.top), cv::Point(obj.right, obj.bottom),
                     cv::Scalar(b, g, r), 5);
 
