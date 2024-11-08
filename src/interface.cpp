@@ -7,8 +7,9 @@
 #include "opencv2/opencv.hpp"
 #include "infer/infer.hpp"
 #include "resnet/resnet.hpp"
+#include "classificationWithoutPostProcessing/cls.hpp"
 #include "yolo/yolov11pose.hpp"
-#include "common/image.hpp"
+#include "common/image.hpp" 
 
 #define UNUSED(expr) do { (void)(expr); } while (0)
 
@@ -101,6 +102,35 @@ public:
     }
 };
 }}//! end namespace pybind11::detail
+
+class TrtClsNoPostInfer{
+public:
+    TrtClsNoPostInfer(std::string model_path, int gpu_id = 0)
+    {
+        instance_ = cls::load(model_path, gpu_id);
+    }
+
+
+    cls::Attribute forward(const cv::Mat& image)
+    {
+        return instance_->forward(trt::cvimg(image));
+    }
+
+    cls::Attribute forward_path(const std::string& image_path)
+    {
+        cv::Mat image = cv::imread(image_path);
+        return instance_->forward(trt::cvimg(image));
+    }
+
+
+    bool valid(){
+		return instance_ != nullptr;
+	}
+
+private:
+    std::shared_ptr<cls::Infer> instance_;
+
+};
 
 class TrtResnetInfer{
 public:
@@ -220,4 +250,10 @@ PYBIND11_MODULE(trtinfer, m){
 		.def_property_readonly("valid", &TrtResnetInfer::valid)
         .def("forward_path", &TrtResnetInfer::forward_path, py::arg("image_path"))
 		.def("forward", &TrtResnetInfer::forward, py::arg("image"));
+    
+    py::class_<TrtClsNoPostInfer>(m, "TrtClsNoPostInfer")
+		.def(py::init<string, int>(), py::arg("model_path"), py::arg("gpu_id"))
+		.def_property_readonly("valid", &TrtClsNoPostInfer::valid)
+        .def("forward_path", &TrtClsNoPostInfer::forward_path, py::arg("image_path"))
+		.def("forward", &TrtClsNoPostInfer::forward, py::arg("image"));
 };
