@@ -134,6 +134,54 @@ struct ResizeRandomCropMatrix
 };
 
 
+// 用于目标检测模型检测出区域后，截取出该区域并做resize到目标大小
+struct ResizeCropMatrix 
+{
+    float i2d[6];  // image to dst(network), 2x3 matrix
+    float d2i[6];  // dst to image, 2x3 matrix
+
+    // 1 0 -x     sx 0  -x*sx
+    // 0 1 -y  -> 0  sy -y*sy
+    // 0 0 1      0  0  1
+    void compute(const std::tuple<int, int> &to, 
+                const std::tuple<int, int> &start, const std::tuple<int, int> &end) 
+    {
+        int start_x = std::get<0>(start);
+        int start_y = std::get<1>(start);
+        
+        int end_x = std::get<0>(end);
+        int end_y = std::get<1>(end);
+
+
+        int dst_w = std::get<0>(to);
+        int dst_h = std::get<1>(to);
+
+        float scale_x = 1.0f * (end_x - start_x) / dst_w;
+        float scale_y = 1.0f * (end_y - start_y) / dst_h;
+
+        i2d[0] = scale_x;
+        i2d[1] = 0;
+        i2d[2] = -start_x * scale_x;
+        i2d[3] = 0;
+        i2d[4] = scale_y;
+        i2d[5] = -start_y * scale_y;
+
+        double D = i2d[0] * i2d[4] - i2d[1] * i2d[3];
+        D = D != 0. ? double(1.) / D : double(0.);
+        double A11 = i2d[4] * D, A22 = i2d[0] * D, A12 = -i2d[1] * D, A21 = -i2d[3] * D;
+        double b1 = -A11 * i2d[2] - A12 * i2d[5];
+        double b2 = -A21 * i2d[2] - A22 * i2d[5];
+
+        d2i[0] = A11;
+        d2i[1] = A12;
+        d2i[2] = b1;
+        d2i[3] = A21;
+        d2i[4] = A22;
+        d2i[5] = b2;
+    }
+};
+
+
 struct AffineMatrix 
 {
     float i2d[6];  // image to dst(network), 2x3 matrix
