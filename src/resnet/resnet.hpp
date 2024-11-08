@@ -23,7 +23,7 @@ public:
                                             void *stream = nullptr) = 0;
 };
 
-std::shared_ptr<Infer> load(const std::string &engine_file);
+std::shared_ptr<Infer> load(const std::string &engine_file, int gpu_id=0);
 
 }
 

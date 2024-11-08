@@ -270,8 +270,9 @@ Infer *loadraw(const std::string &engine_file)
     return impl;
 }
 
-shared_ptr<Infer> load(const string &engine_file) 
+shared_ptr<Infer> load(const string &engine_file, int gpu_id) 
 {
+    checkRuntime(cudaSetDevice(gpu_id));
     return std::shared_ptr<InferImpl>((InferImpl *)loadraw(engine_file));
 }
 

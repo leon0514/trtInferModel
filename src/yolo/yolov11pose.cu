@@ -342,9 +342,10 @@ Infer *loadraw(const std::string &engine_file, float confidence_threshold,
     return impl;
 }
 
-shared_ptr<Infer> load(const string &engine_file, float confidence_threshold,
+shared_ptr<Infer> load(const string &engine_file, int gpu_id, float confidence_threshold,
                        float nms_threshold) 
 {
+    checkRuntime(cudaSetDevice(gpu_id));
     return std::shared_ptr<InferImpl>(
         (InferImpl *)loadraw(engine_file, confidence_threshold, nms_threshold));
 }

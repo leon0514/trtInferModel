@@ -104,9 +104,9 @@ public:
 
 class TrtResnetInfer{
 public:
-    TrtResnetInfer(std::string model_path)
+    TrtResnetInfer(std::string model_path, int gpu_id = 0)
     {
-        instance_ = resnet::load(model_path);
+        instance_ = resnet::load(model_path, gpu_id);
     }
 
 
@@ -134,9 +134,9 @@ private:
 
 class TrtYolov11poseInfer{
 public:
-    TrtYolov11poseInfer(std::string model_path, float confidence_threshold=0.5f, float nms_threshold=0.45f)
+    TrtYolov11poseInfer(std::string model_path, int gpu_id = 0, float confidence_threshold=0.5f, float nms_threshold=0.45f)
     {
-        instance_ = yolov11pose::load(model_path);
+        instance_ = yolov11pose::load(model_path, gpu_id, confidence_threshold, nms_threshold);
     }
 
     yolov11pose::BoxArray forward(const cv::Mat& image)
