@@ -72,6 +72,65 @@ struct ResizeMatrix
     }
 };
 
+struct ResizeRandomCropMatrix 
+{
+    float i2d[6];  // image to dst(network), 2x3 matrix
+    float d2i[6];  // dst to image, 2x3 matrix
+
+    void compute(const std::tuple<int, int> &from, const std::tuple<int, int> &to) 
+    {
+        int resize_w = 1920;
+        int resize_h = 1080
+        
+        int h = std::get<0>(from);
+        int w = std::get<1>(from);
+
+        int sub_img_w = std::get<0>(to);
+        int sub_img_h = std::get<1>(to);
+
+        // 计算缩放比例
+        bool flag = false;
+        if ((w - h) * (resize_w - resize_h) < 0) {
+            std::swap(resize_w, resize_h);
+            std::swap(sub_img_w, sub_img_h);
+            flag = true;
+        }
+        float scale = max(static_cast<float>(resize_h) / h, static_cast<float>(resize_w) / w);
+
+        // 计算放射矩阵
+        float cx = w / 2.0f;
+        float cy = h / 2.0f;
+        float tx = (resize_w - sub_img_w) / 2.0f;
+        float ty = (resize_h - sub_img_h) / 2.0f;
+
+        i2d[0] = scale;
+        i2d[1] = 0;
+        i2d[2] = -scale * cx + tx;
+        i2d[3] = 0;
+        i2d[4] = scale;
+        i2d[5] = -scale * cy + ty;
+
+        // 如果需要旋转90度
+        if (flag) {
+            std::swap(i2d[0], i2d[3]);
+            std::swap(i2d[1], i2d[4]);
+        }
+
+        double D = i2d[0] * i2d[4] - i2d[1] * i2d[3];
+        D = D != 0. ? double(1.) / D : double(0.);
+        double A11 = i2d[4] * D, A22 = i2d[0] * D, A12 = -i2d[1] * D, A21 = -i2d[3] * D;
+        double b1 = -A11 * i2d[2] - A12 * i2d[5];
+        double b2 = -A21 * i2d[2] - A22 * i2d[5];
+
+        d2i[0] = A11;
+        d2i[1] = A12;
+        d2i[2] = b1;
+        d2i[3] = A21;
+        d2i[4] = A22;
+        d2i[5] = b2;
+    }
+};
+
 
 struct AffineMatrix 
 {
