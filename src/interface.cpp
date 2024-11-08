@@ -7,7 +7,7 @@
 #include "opencv2/opencv.hpp"
 #include "infer/infer.hpp"
 #include "resnet/resnet.hpp"
-#include "qoe/qoe.hpp"
+#include "CenseoQoE/qoe.hpp"
 #include "yolo/yolov11pose.hpp"
 #include "common/image.hpp" 
 #include "common/data.hpp" 
