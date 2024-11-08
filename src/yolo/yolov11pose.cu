@@ -156,7 +156,7 @@ public:
     vector<shared_ptr<trt::Memory<unsigned char>>> preprocess_buffers_;
     trt::Memory<float> input_buffer_, bbox_predict_, output_boxarray_;
     int network_input_width_, network_input_height_;
-    Norm normalize_;
+    pre::Norm normalize_;
     vector<int> bbox_head_dims_;
     int num_classes_ = 0;
     bool isdynamic_model_ = false;
@@ -182,8 +182,8 @@ public:
         }
     }
 
-    void preprocess(int ibatch, const Image &image,
-                    shared_ptr<trt::Memory<unsigned char>> preprocess_buffer, AffineMatrix &affine,
+    void preprocess(int ibatch, const trt::Image &image,
+                    shared_ptr<trt::Memory<unsigned char>> preprocess_buffer, pre::AffineMatrix &affine,
                     void *stream = nullptr)
     {
         affine.compute(make_tuple(image.width, image.height),
@@ -223,7 +223,6 @@ public:
 
         trt_->print();
 
-        this->type_ = type;
         this->confidence_threshold_ = confidence_threshold;
         this->nms_threshold_ = nms_threshold;
 
@@ -233,7 +232,7 @@ public:
         network_input_height_ = input_dim[2];
         isdynamic_model_ = trt_->has_dynamic_dim();
 
-        normalize_ = Norm::alpha_beta(1 / 255.0f, 0.0f, ChannelType::SwapRB);
+        normalize_ = pre::Norm::alpha_beta(1 / 255.0f, 0.0f, ChannelType::SwapRB);
         num_classes_ = 1;
         return true;
     }
