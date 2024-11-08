@@ -68,7 +68,7 @@ void yolov11poseInfer()
     const std::string cocolabels[] = { "person" };
 
     cv::Mat image = cv::imread("inference/gril.jpg");
-    auto yolov11pose = yolov11pose::load("resnet.engine");
+    auto yolov11pose = yolov11pose::load("yolov11s-pose.transd.engine");
     if (yolov11pose == nullptr) return;
     auto objs = yolov11pose->forward(trt::cvimg(image));
     for (auto &obj : objs) 
