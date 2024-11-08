@@ -71,7 +71,7 @@ void yolov11poseInfer()
     auto yolov11pose = yolov11pose::load("yolov11s-pose.transd.engine");
     if (yolov11pose == nullptr) return;
     auto objs = yolov11pose->forward(trt::cvimg(image));
-    print("objs size : %d\n", objs.size());
+    printf("objs size : %d\n", objs.size());
     for (auto &obj : objs) 
     {
         uint8_t b, g, r;

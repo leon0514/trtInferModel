@@ -160,7 +160,6 @@ public:
     vector<int> bbox_head_dims_;
     int num_classes_ = 0;
     bool isdynamic_model_ = false;
-    vector<shared_ptr<trt::Memory<unsigned char>>> box_segment_cache_;
 
     virtual ~InferImpl() = default;
 
@@ -276,7 +275,7 @@ public:
         vector<pre::AffineMatrix> affine_matrixs(num_image);
         cudaStream_t stream_ = (cudaStream_t)stream;
         for (int i = 0; i < num_image; ++i)
-        preprocess(i, images[i], preprocess_buffers_[i], affine_matrixs[i], stream);
+            preprocess(i, images[i], preprocess_buffers_[i], affine_matrixs[i], stream);
 
         float *bbox_output_device = bbox_predict_.gpu();
         vector<void *> bindings{input_buffer_.gpu(), bbox_output_device};
@@ -325,6 +324,7 @@ public:
                     }
                 }
             }
+            output.emplace_back(result_object_box);
         }
         return arrout;
     }
