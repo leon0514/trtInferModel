@@ -346,7 +346,7 @@ shared_ptr<Infer> load(const string &engine_file, float confidence_threshold,
                        float nms_threshold) 
 {
     return std::shared_ptr<InferImpl>(
-        (InferImpl *)loadraw(engine_file, type, confidence_threshold, nms_threshold));
+        (InferImpl *)loadraw(engine_file, confidence_threshold, nms_threshold));
 }
 
 }
