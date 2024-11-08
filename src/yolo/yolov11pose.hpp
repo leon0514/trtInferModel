@@ -4,34 +4,13 @@
 #include <vector>
 #include <string>
 #include "common/image.hpp"
-
+#include "common/data.hpp"
 
 namespace yolov11pose
 {
 
-struct PosePoint
-{
-    float x, y,confidence;
-    PosePoint() = default;
-    PosePoint(float x, float y, float confidence) :
-        x(x), y(y), confidence(confidence) {}
-};
-
-struct Box 
-{
-    float left, top, right, bottom, confidence;
-    int class_label;
-    std::vector<PosePoint> pose;
-
-    Box() = default;
-    Box(float left, float top, float right, float bottom, float confidence, int class_label)
-        : left(left),
-            top(top),
-            right(right),
-            bottom(bottom),
-            confidence(confidence),
-            class_label(class_label) {}
-};
+using PosePoint = data::PosePoint;
+using Box       = data::Box;
 
 using  BoxArray = std::vector<Box>;
 

@@ -10,6 +10,7 @@
 #include "classificationWithoutPostProcessing/cls.hpp"
 #include "yolo/yolov11pose.hpp"
 #include "common/image.hpp" 
+#include "common/data.hpp" 
 
 #define UNUSED(expr) do { (void)(expr); } while (0)
 
@@ -111,12 +112,12 @@ public:
     }
 
 
-    cls::Attribute forward(const cv::Mat& image)
+    data::Attribute forward(const cv::Mat& image)
     {
         return instance_->forward(trt::cvimg(image));
     }
 
-    cls::Attribute forward_path(const std::string& image_path)
+    data::Attribute forward_path(const std::string& image_path)
     {
         cv::Mat image = cv::imread(image_path);
         return instance_->forward(trt::cvimg(image));
@@ -140,12 +141,12 @@ public:
     }
 
 
-    resnet::Attribute forward(const cv::Mat& image)
+    data::Attribute forward(const cv::Mat& image)
     {
         return instance_->forward(trt::cvimg(image));
     }
 
-    resnet::Attribute forward_path(const std::string& image_path)
+    data::Attribute forward_path(const std::string& image_path)
     {
         cv::Mat image = cv::imread(image_path);
         return instance_->forward(trt::cvimg(image));
@@ -169,12 +170,12 @@ public:
         instance_ = yolov11pose::load(model_path, gpu_id, confidence_threshold, nms_threshold);
     }
 
-    yolov11pose::BoxArray forward(const cv::Mat& image)
+    data::BoxArray forward(const cv::Mat& image)
     {
         return instance_->forward(trt::cvimg(image));
     }
 
-    yolov11pose::BoxArray forward_path(const std::string& image_path)
+    data::BoxArray forward_path(const std::string& image_path)
     {
         cv::Mat image = cv::imread(image_path);
         return instance_->forward(trt::cvimg(image));
@@ -192,34 +193,34 @@ private:
 
 
 PYBIND11_MODULE(trtinfer, m){
-    py::class_<resnet::Attribute>(m, "Attribute")
-        .def_readwrite("confidence", &resnet::Attribute::confidence)
-        .def_readwrite("class_label", &resnet::Attribute::class_label)
-        .def("__repr__", [](const resnet::Attribute &attr) {
+    py::class_<data::Attribute>(m, "Attribute")
+        .def_readwrite("confidence", &data::Attribute::confidence)
+        .def_readwrite("class_label", &data::Attribute::class_label)
+        .def("__repr__", [](const data::Attribute &attr) {
             std::ostringstream oss;
             oss << "Attribute(class_label: " << attr.class_label << ", confidence: " << attr.confidence << ")";
             return oss.str();
         });
 
-    py::class_<yolov11pose::PosePoint>(m, "PosePoint")
-        .def_readwrite("x", &yolov11pose::PosePoint::x)
-        .def_readwrite("y", &yolov11pose::PosePoint::x)
-        .def_readwrite("confidence", &yolov11pose::PosePoint::confidence)
-        .def("__repr__", [](const yolov11pose::PosePoint &point) {
+    py::class_<data::PosePoint>(m, "PosePoint")
+        .def_readwrite("x", &data::PosePoint::x)
+        .def_readwrite("y", &data::PosePoint::x)
+        .def_readwrite("confidence", &data::PosePoint::confidence)
+        .def("__repr__", [](const data::PosePoint &point) {
             std::ostringstream oss;
             oss << "PosePoint(x: " << point.x << ", y: " << point.y << ", confidence: " << point.confidence <<")";
             return oss.str();
         });
     
-    py::class_<yolov11pose::Box>(m, "Box")
-        .def_readwrite("left", &yolov11pose::Box::left)
-        .def_readwrite("top", &yolov11pose::Box::top)
-        .def_readwrite("right", &yolov11pose::Box::right)
-        .def_readwrite("bottom", &yolov11pose::Box::bottom)
-        .def_readwrite("confidence", &yolov11pose::Box::confidence)
-        .def_readwrite("class_label", &yolov11pose::Box::class_label)
-        .def_readwrite("pose", &yolov11pose::Box::pose)
-        .def("__repr__", [](const yolov11pose::Box &box) {
+    py::class_<data::Box>(m, "Box")
+        .def_readwrite("left", &data::Box::left)
+        .def_readwrite("top", &data::Box::top)
+        .def_readwrite("right", &data::Box::right)
+        .def_readwrite("bottom", &data::Box::bottom)
+        .def_readwrite("confidence", &data::Box::confidence)
+        .def_readwrite("class_label", &data::Box::class_label)
+        .def_readwrite("pose", &data::Box::pose)
+        .def("__repr__", [](const data::Box &box) {
             std::ostringstream oss;
             oss << "Box(class_label: " << box.class_label
                 << ", left: " << box.left

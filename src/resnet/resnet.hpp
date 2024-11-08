@@ -3,18 +3,12 @@
 #include <vector>
 #include <string>
 #include "common/image.hpp"
+#include "common/data.hpp"
 
 namespace resnet
 {
 
-struct Attribute 
-{
-    float confidence;
-    int class_label;
-
-    Attribute() = default;
-    Attribute(float confidence, int class_label) : confidence(confidence), class_label(class_label) {}
-};
+using Attribute = data::Attribute
 
 class Infer {
 public:

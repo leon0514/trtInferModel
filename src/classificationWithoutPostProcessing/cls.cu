@@ -174,10 +174,10 @@ public:
             int max_index = -1;
             for (int cls_index = 0; cls_index < num_classes_; cls_index++)
             {
-                if (output_array_[cls_index] > max_score)
+                if (output_array_cpu[cls_index] > max_score)
                 {
-                    max_score = output_array_[cls_index];
-                    max_index = cls_index
+                    max_score = output_array_cpu[cls_index];
+                    max_index = cls_index;
                 }
             }
             arrout.emplace_back(max_score, max_index);
