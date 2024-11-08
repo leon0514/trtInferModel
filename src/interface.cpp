@@ -170,6 +170,16 @@ PYBIND11_MODULE(trtinfer, m){
             oss << "Attribute(class_label: " << attr.class_label << ", confidence: " << attr.confidence << ")";
             return oss.str();
         });
+
+    py::class_<yolov11pose::Point>(m, "Point")
+        .def_readwrite("x", &yolov11pose::Point::x)
+        .def_readwrite("y", &yolov11pose::Point::x)
+        .def_readwrite("confidence", &yolov11pose::Point::confidence)
+        .def("__repr__", [](const yolov11pose::Point &point) {
+            std::ostringstream oss;
+            oss << "Point(x: " << point.x << ", y: " << point.y << ", confidence: " << point.y <<")";
+            return oss.str();
+        });
     
     py::class_<yolov11pose::Box>(m, "Box")
         .def_readwrite("left", &yolov11pose::Box::left)
@@ -178,15 +188,25 @@ PYBIND11_MODULE(trtinfer, m){
         .def_readwrite("bottom", &yolov11pose::Box::bottom)
         .def_readwrite("confidence", &yolov11pose::Box::confidence)
         .def_readwrite("class_label", &yolov11pose::Box::class_label)
-        .def("__repr__", [](const yolov11pose::Box &attr) {
+        .def_readwrite("pose", &yolov11pose::Box::pose)
+        .def("__repr__", [](const yolov11pose::Box &box) {
             std::ostringstream oss;
-            oss << "Box(class_label: " 
-                << attr.class_label 
-                << ", left: " << attr.left
-                << ", top: " << attr.top
-                << ", right: " << attr.right
-                << ", bottom: " << attr.bottom
-                << ", confidence: " << attr.confidence << ")";
+            oss << "Box(class_label: " << box.class_label
+                << ", left: " << box.left
+                << ", top: " << box.top
+                << ", right: " << box.right
+                << ", bottom: " << box.bottom
+                << ", confidence: " << box.confidence
+                << "), Pose: [";
+
+            for (size_t i = 0; i < box.pose.size(); ++i) {
+                // 调用 Point 的 __repr__ 方法
+                oss << py::str(box.pose[i]);
+                if (i < box.pose.size() - 1) {
+                    oss << ", ";
+                }
+            }
+            oss << "]";
             return oss.str();
         });
 
