@@ -1,4 +1,4 @@
-#include "CenseoQoE/qoe.hpp"
+#include "PPLCNet/pplcnet.hpp"
 #include "infer/infer.hpp"
 #include "common/check.hpp"
 #include "common/logger.hpp"
@@ -9,10 +9,12 @@
 #include "preprocess/preprocess.hpp"
 
 
-namespace qoe
+namespace pplcnet
 {
 
 using namespace std;
+
+
 
 class InferImpl : public Infer 
 {
@@ -49,9 +51,9 @@ public:
     void preprocess(int ibatch, const trt::Image &image,
                     shared_ptr<trt::Memory<unsigned char>> preprocess_buffer,
                     void *stream = nullptr) {
-        pre::ResizeRandomCropMatrix affine;
+        pre::ResizeShortCenterCropMatrix affine;
         affine.compute(make_tuple(image.width, image.height),
-                    make_tuple(network_input_width_, network_input_height_), 1920, 1080);
+                    make_tuple(network_input_width_, network_input_height_), 256);
 
         size_t input_numel = network_input_width_ * network_input_height_ * 3;
         float *input_device = input_buffer_.gpu() + ibatch * input_numel;
@@ -95,9 +97,9 @@ public:
 
         // normalize_ = Norm::alpha_beta(1 / 255.0f, 0.0f, ChannelType::SwapRB);
         // [0.485, 0.456, 0.406], [0.229, 0.224, 0.225]
-        // float mean[3] = {0.485, 0.456, 0.406}; 
-        // float std[3] = {0.229, 0.224, 0.225};
-        normalize_ = pre::Norm::alpha_beta(1/255.0, 0, pre::ChannelType::SwapRB);
+        float mean[3] = {0.485, 0.456, 0.406}; 
+        float std[3] = {0.229, 0.224, 0.225};
+        normalize_ = pre::Norm::mean_std(mean, std, 1/255.0,  pre::ChannelType::SwapRB);
         num_classes_ = trt_->static_dims(1)[1];
         return true;
     }
@@ -154,7 +156,6 @@ public:
             return {};
         }
 
-        
         checkRuntime(cudaMemcpyAsync(output_array_.cpu(), output_array_.gpu(),
                                     output_array_.gpu_bytes(), cudaMemcpyDeviceToHost, stream_));
         checkRuntime(cudaMemcpyAsync(classes_indices_.cpu(), classes_indices_.gpu(),
