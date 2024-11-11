@@ -220,7 +220,7 @@ public:
         isdynamic_model_ = trt_->has_dynamic_dim();
 
         normalize_ = pre::Norm::alpha_beta(1 / 255.0f, 0.0f, pre::ChannelType::SwapRB);
-        num_classes_ = 1;
+        num_classes_ = bbox_head_dims_[2] - 4;
         return true;
     }
 
@@ -305,6 +305,7 @@ public:
                 int keepflag = pbox[6];
                 if (keepflag == 1) {
                     Box result_object_box(pbox[0], pbox[1], pbox[2], pbox[3], pbox[4], label);
+                    output.emplace_back(result_object_box);
                 }
             }
         }

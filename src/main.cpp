@@ -1,5 +1,6 @@
 #include "resnet/resnet.hpp"
 #include "yolo/yolov11pose.hpp"
+#include "yolo/yolov8.hpp"
 #include "opencv2/opencv.hpp"
 #include "common/timer.hpp"
 #include "common/image.hpp"
@@ -133,21 +134,15 @@ void yolov8Infer()
             continue;
         }
         auto name = cocolabels[obj.class_label];
-        auto caption = cv::format("%s %.2f", name, obj.confidence);
+        auto caption = cv::format("%s %.2f", name.c_str(), obj.confidence);
         int width = cv::getTextSize(caption, 0, 1, 2, nullptr).width + 10;
         cv::rectangle(image, cv::Point(obj.left - 3, obj.top - 33),
                     cv::Point(obj.left + width, obj.top), cv::Scalar(b, g, r), -1);
         cv::putText(image, caption, cv::Point(obj.left, obj.top - 5), 0, 1, cv::Scalar::all(0), 2, 16);
-
-        for (const auto& point : obj.pose)
-        {
-            int x = (int)point.x;
-            int y = (int)point.y;
-            cv::circle(image, cv::Point(x, y), 6, cv::Scalar(b, g, r), -1);
-        }
-        printf("Save result to Yolov8-result.jpg, %d objects\n", (int)objs.size());
-        cv::imwrite("Yolov8-result.jpg", image);
+        
     }
+    printf("Save result to Yolov8-result.jpg, %d objects\n", (int)objs.size());
+    cv::imwrite("Yolov8-result.jpg", image);
 
 }
 

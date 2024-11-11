@@ -168,7 +168,7 @@ class TrtPPLCNetInfer{
 public:
     TrtPPLCNetInfer(std::string model_path, int gpu_id = 0)
     {
-        instance_ = resnet::load(model_path, gpu_id);
+        instance_ = pplcnet::load(model_path, gpu_id);
     }
 
 

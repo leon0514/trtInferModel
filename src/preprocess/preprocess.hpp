@@ -144,13 +144,6 @@ struct ResizeShortCenterCropMatrix
         int sub_img_h = std::get<1>(to);
 
         // 计算缩放比例
-        bool flag = false;
-        if ((w - h) * (resize_w - resize_h) < 0) 
-        {
-            std::swap(resize_w, resize_h);
-            std::swap(sub_img_w, sub_img_h);
-            flag = true;
-        }
         float scale = static_cast<float>(resize_short) / min(w, h);
 
         int resize_w = static_cast<int>(scale * w);
@@ -168,13 +161,6 @@ struct ResizeShortCenterCropMatrix
         i2d[3] = 0;
         i2d[4] = scale;
         i2d[5] = -scale * cy + ty;
-
-        // 如果需要旋转90度
-        if (flag) 
-        {
-            std::swap(i2d[0], i2d[3]);
-            std::swap(i2d[1], i2d[4]);
-        }
 
         double D = i2d[0] * i2d[4] - i2d[1] * i2d[3];
         D = D != 0. ? double(1.) / D : double(0.);
