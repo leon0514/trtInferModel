@@ -8,6 +8,7 @@
 #include "infer/infer.hpp"
 #include "resnet/resnet.hpp"
 #include "CenseoQoE/qoe.hpp"
+#include "PPLCNet/pplcnet.hpp"
 #include "yolo/yolov11pose.hpp"
 #include "yolo/yolov8.hpp"
 #include "common/image.hpp" 
@@ -163,6 +164,35 @@ private:
 
 };
 
+class TrtPPLCNetInfer{
+public:
+    TrtPPLCNetInfer(std::string model_path, int gpu_id = 0)
+    {
+        instance_ = resnet::load(model_path, gpu_id);
+    }
+
+
+    data::Attribute forward(const cv::Mat& image)
+    {
+        return instance_->forward(trt::cvimg(image));
+    }
+
+    data::Attribute forward_path(const std::string& image_path)
+    {
+        cv::Mat image = cv::imread(image_path);
+        return instance_->forward(trt::cvimg(image));
+    }
+
+
+    bool valid(){
+		return instance_ != nullptr;
+	}
+
+private:
+    std::shared_ptr<pplcnet::Infer> instance_;
+
+};
+
 
 class TrtYolov11poseInfer{
 public:
@@ -291,6 +321,12 @@ PYBIND11_MODULE(trtinfer, m){
 		.def_property_readonly("valid", &TrtResnetInfer::valid)
         .def("forward_path", &TrtResnetInfer::forward_path, py::arg("image_path"))
 		.def("forward", &TrtResnetInfer::forward, py::arg("image"));
+
+    py::class_<TrtPPLCNetInfer>(m, "TrtPPLCNetInfer")
+		.def(py::init<string, int>(), py::arg("model_path"), py::arg("gpu_id"))
+		.def_property_readonly("valid", &TrtPPLCNetInfer::valid)
+        .def("forward_path", &TrtPPLCNetInfer::forward_path, py::arg("image_path"))
+		.def("forward", &TrtPPLCNetInfer::forward, py::arg("image"));
     
     py::class_<TrtQoEInfer>(m, "TrtQoEInfer")
 		.def(py::init<string, int>(), py::arg("model_path"), py::arg("gpu_id"))
