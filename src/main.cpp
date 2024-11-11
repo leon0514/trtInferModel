@@ -81,7 +81,7 @@ void yolov11poseInfer()
                     cv::Scalar(b, g, r), 5);
 
         auto name = cocolabels[obj.class_label];
-        auto caption = cv::format("%s %.2f", name, obj.confidence);
+        auto caption = cv::format("%s %.2f", name.c_str(), obj.confidence);
         int width = cv::getTextSize(caption, 0, 1, 2, nullptr).width + 10;
         cv::rectangle(image, cv::Point(obj.left - 3, obj.top - 33),
                     cv::Point(obj.left + width, obj.top), cv::Scalar(b, g, r), -1);
